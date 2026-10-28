@@ -3,8 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Avatar from './avatar'
 
-// ...
-
+type Claims = { sub: string; email?: string; [key: string]: unknown }
 
 export default function AccountForm({ claims }: { claims: Claims | null }) {
   const supabase = createClient()
@@ -77,14 +76,26 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
         avatar_url,
         updated_at: new Date().toISOString(),
       })
-
-  // ...
+      if (error) throw error
+      alert('Profile updated!')
+    } catch (error) {
+      alert('Error updating the data!')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="form-widget">
-
-      {/* ... */}
-
+      <Avatar
+        uid={claims?.sub ?? null}
+        url={avatar_url}
+        size={150}
+        onUpload={(url) => {
+          setAvatarUrl(url)
+          updateProfile({ fullname, username, website, avatar_url: url })
+        }}
+      />
       <div>
         <label htmlFor="email">Email</label>
         <input id="email" type="text" value={claims?.email ?? ''} disabled />
