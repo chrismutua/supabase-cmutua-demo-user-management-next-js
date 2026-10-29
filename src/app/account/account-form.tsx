@@ -47,6 +47,8 @@ export default function AccountForm({ claims }: { claims: Claims | null }) {
   }, [claims, supabase])
 
   useEffect(() => {
+    // The profile fetch intentionally updates loading state after the async request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getProfile()
   }, [claims, getProfile])
 
